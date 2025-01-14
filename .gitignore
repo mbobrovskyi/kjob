@@ -29,3 +29,5 @@ go.work
 
 # Directory with CRDs for dependencies
 dep-crds
+
+kjob.yaml
