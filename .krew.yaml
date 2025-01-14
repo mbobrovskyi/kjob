@@ -1,0 +1,37 @@
+apiVersion: krew.googlecontainertools.github.com/v1alpha2
+kind: Plugin
+metadata:
+  name: kjob
+spec:
+  version: {{ .TagName }}
+  shortDescription: Tool for CLI-loving ML researchers.
+  homepage: https://github.com/kubernetes-sigs/kjob/
+  description: |
+    The kubectl-kjob plugin, kjobctl, allows you to list, describe and create jobs.
+    
+    See the documentation for more information: https://github.com/kubernetes-sigs/kjob/blob/main/docs/_index.md.
+  platforms:
+  - selector:
+      matchLabels:
+        os: "linux"
+        arch: "amd64"
+    {{addURIAndSha "https://github.com/kubernetes-sigs/kjob/releases/download/{{ .TagName }}/kubectl-kjob-linux-amd64.tar.gz" .TagName }}
+    bin: "kubectl-kjob"
+  - selector:
+      matchLabels:
+        os: "linux"
+        arch: "arm64"
+    {{addURIAndSha "https://github.com/kubernetes-sigs/kjob/releases/download/{{ .TagName }}/kubectl-kjob-linux-arm64.tar.gz" .TagName }}
+    bin: "kubectl-kjob"
+  - selector:
+      matchLabels:
+        os: "darwin"
+        arch: "amd64"
+    {{addURIAndSha "https://github.com/kubernetes-sigs/kjob/releases/download/{{ .TagName }}/kubectl-kjob-darwin-amd64.tar.gz" .TagName }}
+    bin: "kubectl-kjob"
+  - selector:
+      matchLabels:
+        os: "darwin"
+        arch: "arm64"
+    {{addURIAndSha "https://github.com/kubernetes-sigs/kjob/releases/download/{{ .TagName }}/kubectl-kjob-darwin-arm64.tar.gz" .TagName }}
+    bin: "kubectl-kjob"
