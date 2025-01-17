@@ -1,6 +1,9 @@
 # Kubectl Kjob Plugin
 
-The `kubectl-kjob` plugin, `kjobctl`, allows you to list, describe and create jobs.
+This kubectl plugin allows ML researchers to run templated Jobs with different values
+for the application-specific parameters, without the need to edit and submit entire
+YAML files. The tool comes with built-in support for running slurm scripts inside
+a Kubernetes cluster.
 
 ## Syntax
 
