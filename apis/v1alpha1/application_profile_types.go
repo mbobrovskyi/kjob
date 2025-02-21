@@ -40,31 +40,33 @@ const (
 type Flag string
 
 const (
-	CmdFlag         Flag = "cmd"
-	ParallelismFlag Flag = "parallelism"
-	CompletionsFlag Flag = "completions"
-	ReplicasFlag    Flag = "replicas"
-	MinReplicasFlag Flag = "min-replicas"
-	MaxReplicasFlag Flag = "max-replicas"
-	RequestFlag     Flag = "request"
-	LocalQueueFlag  Flag = "localqueue"
-	RayClusterFlag  Flag = "raycluster"
-	ArrayFlag       Flag = "array"
-	CpusPerTaskFlag Flag = "cpus-per-task"
-	ErrorFlag       Flag = "error"
-	GpusPerTaskFlag Flag = "gpus-per-task"
-	InputFlag       Flag = "input"
-	JobNameFlag     Flag = "job-name"
-	MemPerNodeFlag  Flag = "mem"
-	MemPerCPUFlag   Flag = "mem-per-cpu"
-	MemPerGPUFlag   Flag = "mem-per-gpu"
-	MemPerTaskFlag  Flag = "mem-per-task"
-	NodesFlag       Flag = "nodes"
-	NTasksFlag      Flag = "ntasks"
-	OutputFlag      Flag = "output"
-	PartitionFlag   Flag = "partition"
-	PriorityFlag    Flag = "priority"
-	TimeFlag        Flag = "time"
+	CmdFlag                   Flag = "cmd"
+	ParallelismFlag           Flag = "parallelism"
+	CompletionsFlag           Flag = "completions"
+	ReplicasFlag              Flag = "replicas"
+	MinReplicasFlag           Flag = "min-replicas"
+	MaxReplicasFlag           Flag = "max-replicas"
+	RequestFlag               Flag = "request"
+	LocalQueueFlag            Flag = "localqueue"
+	RayClusterFlag            Flag = "raycluster"
+	ArrayFlag                 Flag = "array"
+	CpusPerTaskFlag           Flag = "cpus-per-task"
+	ErrorFlag                 Flag = "error"
+	GpusPerTaskFlag           Flag = "gpus-per-task"
+	InputFlag                 Flag = "input"
+	JobNameFlag               Flag = "job-name"
+	MemPerNodeFlag            Flag = "mem"
+	MemPerCPUFlag             Flag = "mem-per-cpu"
+	MemPerGPUFlag             Flag = "mem-per-gpu"
+	MemPerTaskFlag            Flag = "mem-per-task"
+	NodesFlag                 Flag = "nodes"
+	NTasksFlag                Flag = "ntasks"
+	OutputFlag                Flag = "output"
+	PartitionFlag             Flag = "partition"
+	PriorityFlag              Flag = "priority"
+	TimeFlag                  Flag = "time"
+	PodTemplateLabelFlag      Flag = "pod-template-label"
+	PodTemplateAnnotationFlag Flag = "pod-template-annotation"
 )
 
 // TemplateReference is the name of the template.
@@ -116,17 +118,18 @@ type SupportedMode struct {
 	Template TemplateReference `json:"template"`
 
 	// requiredFlags point which cli flags are required to be passed in order to fill the gaps in the templates.
-	// Possible values are cmd, parallelism, completions, replicas, min-replicas, max-replicas, request, localqueue, and raycluster.
-	// replicas, min-replicas, and max-replicas flags used only for RayJob and RayCluster mode.
+	// Possible values are cmd, parallelism, completions, replicas, min-replicas, max-replicas, request, localqueue,
+	// raycluster, pod-template-label and pod-template-annotation.
+	// The replicas, min-replicas, and max-replicas flags used only for RayJob and RayCluster mode.
 	// The raycluster flag used only for the RayJob mode.
 	// The request flag used only for Interactive and Job modes.
 	// The cmd flag used only for Interactive, Job, and RayJob.
 	// The time and priority flags can be used in all modes.
 	// If the raycluster flag are set, none of localqueue, replicas, min-replicas, or max-replicas can be set.
-	// For the Slurm mode, the possible values are: array, cpus-per-task, error, gpus-per-task, input, job-name, mem, mem-per-cpu,
-	// mem-per-gpu, mem-per-task, nodes, ntasks, output, partition, localqueue.
+	// For the Slurm mode, the possible values are: array, cpus-per-task, error, gpus-per-task, input, job-name, mem,
+	// mem-per-cpu, mem-per-gpu, mem-per-task, nodes, ntasks, output, partition, localqueue.
 	//
-	// cmd and requests values are going to be added only to the first primary container.
+	// The cmd and requests values are going to be added only to the first primary container.
 	//
 	// +optional
 	// +listType=set
