@@ -202,7 +202,16 @@ kjobctl create slurm --profile APPLICATION_PROFILE_NAME [--localqueue LOCAL_QUEU
     <tr>
         <td></td>
         <td style="line-height: 130%; word-wrap: break-word;">
-            <p>Wait for the Job to complete and stream its Pod logs</p>
+            <p>Wait for the Job to complete and stream its Pod logs.</p>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">--wait-timeout duration</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td style="line-height: 130%; word-wrap: break-word;">
+            <p>Timeout for waiting for the job to complete.</p>
         </td>
     </tr>
     </tbody>
