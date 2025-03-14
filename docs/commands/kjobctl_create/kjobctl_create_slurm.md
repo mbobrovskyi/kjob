@@ -12,7 +12,7 @@ The file is auto-generated from the Go source code of the component using the
 Create a slurm job
 
 ```
-kjobctl create slurm --profile APPLICATION_PROFILE_NAME [--localqueue LOCAL_QUEUE_NAME] [--skip-localqueue-validation] [--priority NAME] [--skip-priority-validation] [--ignore-unknown-flags] [--wait] [--wait-timeout] [--init-image IMAGE] [--first-node-ip] [--first-node-ip-timeout DURATION] [--rm] --  [--array ARRAY] [--cpus-per-task QUANTITY] [--gpus-per-task QUANTITY] [--mem QUANTITY] [--mem-per-task QUANTITY] [--mem-per-cpu QUANTITY] [--mem-per-gpu QUANTITY] [--nodes COUNT] [--ntasks COUNT] [--output FILENAME_PATTERN] [--error FILENAME_PATTERN] [--input FILENAME_PATTERN] [--job-name NAME] [--partition NAME] SCRIPT
+kjobctl create slurm --profile APPLICATION_PROFILE_NAME [--localqueue LOCAL_QUEUE_NAME] [--skip-localqueue-validation] [--priority NAME] [--skip-priority-validation] [--ignore-unknown-flags] [--wait] [--wait-timeout] [--init-image IMAGE] [--first-node-ip] [--first-node-ip-timeout DURATION] [--rm] [--stream-container NAME] [--worker-container NAME] --  [--array ARRAY] [--cpus-per-task QUANTITY] [--gpus-per-task QUANTITY] [--mem QUANTITY] [--mem-per-task QUANTITY] [--mem-per-cpu QUANTITY] [--mem-per-gpu QUANTITY] [--nodes COUNT] [--ntasks COUNT] [--output FILENAME_PATTERN] [--error FILENAME_PATTERN] [--input FILENAME_PATTERN] [--job-name NAME] [--partition NAME] SCRIPT
 ```
 
 
@@ -188,6 +188,15 @@ kjobctl create slurm --profile APPLICATION_PROFILE_NAME [--localqueue LOCAL_QUEU
         </td>
     </tr>
     <tr>
+        <td colspan="2">--stream-container strings</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td style="line-height: 130%; word-wrap: break-word;">
+            <p>Specify containers from which logs will be streamed. This can be set only if --wait is used. By default, all containers are included.</p>
+        </td>
+    </tr>
+    <tr>
         <td colspan="2">--template string</td>
     </tr>
     <tr>
@@ -212,6 +221,15 @@ kjobctl create slurm --profile APPLICATION_PROFILE_NAME [--localqueue LOCAL_QUEU
         <td></td>
         <td style="line-height: 130%; word-wrap: break-word;">
             <p>Timeout for waiting for the job to complete.</p>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">--worker-container strings</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td style="line-height: 130%; word-wrap: break-word;">
+            <p>Specify containers for which limits and volumes will be applied. By default, all containers are included.</p>
         </td>
     </tr>
     </tbody>

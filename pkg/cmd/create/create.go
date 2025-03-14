@@ -23,6 +23,7 @@ import (
 	"io"
 	"os"
 	"os/signal"
+	"slices"
 	"strings"
 	"sync"
 	"syscall"
@@ -65,6 +66,8 @@ const (
 	removeFlagName                   = "rm"
 	ignoreUnknownFlagName            = "ignore-unknown-flags"
 	initImageFlagName                = "init-image"
+	streamContainersFlagName         = "stream-container"
+	workerContainersFlagName         = "worker-container"
 	skipLocalQueueValidationFlagName = "skip-localqueue-validation"
 	skipPriorityValidationFlagName   = "skip-priority-validation"
 	changeDirFlagName                = "chdir"
@@ -192,9 +195,10 @@ type CreateOptions struct {
 	FirstNodeIP        bool
 	RemoveObject       bool
 	ChangeDir          string
-
-	SlurmFlagSet  *pflag.FlagSet
-	activeStreams sync.Map
+	StreamContainers   []string
+	WorkerContainers   []string
+	SlurmFlagSet       *pflag.FlagSet
+	activeStreams      sync.Map
 
 	Command                  []string
 	Parallelism              *int32
@@ -376,6 +380,8 @@ var createModeSubcommands = map[string]modeSubcommand{
 				" [--first-node-ip]" +
 				" [--first-node-ip-timeout DURATION]" +
 				" [--rm]" +
+				" [--stream-container NAME]" +
+				" [--worker-container NAME]" +
 				" -- " +
 				" [--array ARRAY]" +
 				" [--cpus-per-task QUANTITY]" +
@@ -403,6 +409,8 @@ var createModeSubcommands = map[string]modeSubcommand{
 				"Wait for the Job to complete and stream its Pod logs.")
 			subcmd.Flags().DurationVar(&o.WaitTimeout, waitTimeoutFlagName, 0,
 				"Timeout for waiting for the job to complete.")
+			subcmd.Flags().StringArrayVar(&o.StreamContainers, streamContainersFlagName, nil, "Specify containers from which logs will be streamed. This can be set only if --wait is used. By default, all containers are included.")
+			subcmd.Flags().StringArrayVar(&o.WorkerContainers, workerContainersFlagName, nil, "Specify containers for which limits and volumes will be applied. By default, all containers are included.")
 			subcmd.Flags().StringVar(&o.InitImage, initImageFlagName, "registry.k8s.io/busybox:1.27.2",
 				"The image used for the init container.")
 			subcmd.Flags().BoolVar(&o.FirstNodeIP, firstNodeIPFlagName, false,
@@ -552,7 +560,9 @@ func (o *CreateOptions) Complete(clientGetter util.ClientGetter, cmd *cobra.Comm
 		if o.WaitTimeout != 0 && !o.Wait {
 			return errors.New("the --wait-timeout flag is required when --wait is set")
 		}
-
+		if len(o.StreamContainers) != 0 && !o.Wait {
+			return errors.New("the --stream-container can only be specified for streaming output.")
+		}
 		o.Script = slurmArgs[0]
 	}
 
@@ -718,6 +728,7 @@ func (o *CreateOptions) Run(ctx context.Context, clientGetter util.ClientGetter,
 		WithTimeLimit(o.TimeLimit).
 		WithPodTemplateLabels(o.PodTemplateLabels).
 		WithPodTemplateAnnotations(o.PodTemplateAnnotations).
+		WithWorkerContainers(o.WorkerContainers).
 		Do(ctx)
 	if err != nil {
 		return err
@@ -1015,7 +1026,9 @@ func (o *CreateOptions) streamLogsFromPod(ctx context.Context, clientGetter util
 		if pod.Spec.Containers[index].Name == builder.SlurmInitContainerName {
 			continue
 		}
-
+		if len(o.StreamContainers) > 0 && !slices.Contains(o.StreamContainers, pod.Spec.Containers[index].Name) {
+			continue
+		}
 		go func() {
 			err := o.streamLogsFromPodContainer(ctx, clientGetter, pod, index)
 			if err != nil && !errors.Is(err, context.Canceled) && !errors.Is(err, context.DeadlineExceeded) {
