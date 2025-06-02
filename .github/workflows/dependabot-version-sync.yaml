@@ -22,13 +22,13 @@ jobs:
         run: |
           git config user.name "$(git log -1 --pretty=%an)"
           git config user.email "$(git log -1 --pretty=%ae)"
-      - name: Sync controller-runtime version
-        if: ${{ contains(github.event.pull_request.title, 'sigs.k8s.io/controller-runtime') }}
+      - name: Sync controller-tools version
+        if: ${{ contains(github.event.pull_request.title, 'sigs.k8s.io/controller-tools') }}
         run: |
           make manifests
           if ! git diff --exit-code; then
             git add .
-            git commit -m "Sync controller-runtime version"
+            git commit -m "Sync controller-tools version"
             git push
           else
             echo "No changes to commit"
