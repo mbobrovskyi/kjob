@@ -28,7 +28,7 @@ jobs:
           make manifests
           if ! git diff --exit-code; then
             git add .
-            git commit -m "Sync hugo version"
+            git commit -m "Sync controller-runtime version"
             git push
           else
             echo "No changes to commit"
